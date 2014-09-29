@@ -1,4 +1,8 @@
 namespace Config
 {
+	class Control
+	{
+
+	};
 
 }

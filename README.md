@@ -7,6 +7,14 @@ Config
   
     -   All objects that are streamable may be saved
 
+        class Server { 
+          public:
+            std::string name;
+            int port
+        }obj;
+
+        write(obj)
+
     -   Each node denoted like "Server.ctrl.port"
 
     -   Read variable in four fashions

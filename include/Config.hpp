@@ -1,5 +1,6 @@
-#include "Control.hpp"
+#include <string>
 #include <fstream>
+#include "Control.hpp"
 
 namespace Config
 {
@@ -7,20 +8,32 @@ namespace Config
     class Config
     {
     	public:
+            
             enum errorHandler{
-                Error,
-
+                THROW_EXCEPTIONS,
             };
-        public:
-    		Config(std::string, errorHandler);
-    		void load(std::string);
-    		void read(std::string, Control);    		
-    		void read(std::string, Control, T);
-    		void read(std::string, Control, U);
-    		void read(std::string, Control, T, U);
-    		void write(Control);
-    	private:
-    		std::ifstream fileHandle;
+            
+            /**
+             * Config:
+             * @param filename
+             * @param errorHandler
+             */
+            Config(std::string filename, errorHandler error) : errors_(error) 
+            { 
+                fileHandle_.open(filename, std::fstream::in); 
+            }
+            
+            
+            void load(std::string);
+            void read(std::string, Control);    		
+            void read(std::string, Control, T);
+            void read(std::string, Control, U);
+            void read(std::string, Control, T, U);
+            void write(Control);
+    	
+    private:
+            std::ifstream fileHandle_;
+            errorHandler errors_;
 
     };
 

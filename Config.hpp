@@ -1,0 +1,9 @@
+
+namespace Config
+{
+    class Config
+    {
+
+    };
+
+}

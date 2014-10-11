@@ -39,3 +39,11 @@ Config
     - Exception safety is a must
 
     - Ensure shared_ptr can be handled both on the reading and writing part
+
+
+
+TODO:
+Architechture:
+Notes:
+    User specifies the parser/generator
+

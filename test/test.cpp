@@ -1,8 +1,20 @@
 #include <iostream>
-#include "quickcheck/quickcheck.hh"
+#include "PReadWriteRead.hpp"
+#include "Grammar.hpp"
 using namespace std;
 
-int main() {
-  cout << "Hello, World!" << endl;
-  return 1;
+////////////////////////////////////////////////////////////////////////////
+//  Main program
+////////////////////////////////////////////////////////////////////////////
+int
+main()
+{
+    std::cout << "/////////////////////////////////////////////////////////\n\n";
+    std::cout << "\t\tA comma separated list parser for Spirit...\n\n";
+    std::cout << "/////////////////////////////////////////////////////////\n\n";
+
+    std::cout << "Give me a comma separated list of numbers.\n";
+    std::cout << "Type [q or Q] to quit\n\n";
+
+    return 0;
 }

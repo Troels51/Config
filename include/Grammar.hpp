@@ -1,47 +1,41 @@
-/*=============================================================================
-    Copyright (c) 2002-2010 Joel de Guzman
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
-///////////////////////////////////////////////////////////////////////////////
-//
-//  This sample demontrates a parser for a comma separated list of numbers.
-//  No actions.
-//
-//  [ JDG May 10, 2002 ]    spirit1
-//  [ JDG March 24, 2007 ]  spirit2
-//
-///////////////////////////////////////////////////////////////////////////////
-
-#include <boost/config/warning_disable.hpp>
+/** Grammar for json, based on http://www.ietf.org/rfc/rfc4627.txt **/
 #include <boost/spirit/include/qi.hpp>
+#define BOOST_SPIRIT_UNICODE
 
-#include <iostream>
-#include <string>
-#include <vector>
-
-namespace client
+namespace qi = boost::spirit::qi;
+template <typename Iterator>
+struct json : qi::grammar<Iterator, unsigned()>
 {
-    namespace qi = boost::spirit::qi;
-    namespace ascii = boost::spirit::ascii;
-
-    template <typename Iterator>
-    bool parse_numbers(Iterator first, Iterator last)
+    json() : json::base_type(json)
     {
-        using qi::double_;
-        using qi::phrase_parse;
-        using ascii::space;
+        using qi::eps;
+        using qi::lit;
+        using qi::_val;
+        using qi::_1;
+        using boost::spirit::standard::char_; //TODO: json is unicode, spirit may support it
+        whitespace   = char(' ') | char('\t') | char('\r') | char('\n');
+        begin_array  = "[";
+        end_array    = "]";
+        begin_object = "{";
+        end_object   = "}";
+        name_separator  = ":";
+        value_separator = ",";
 
-        bool r = phrase_parse(
-                first,                          /*< start iterator >*/
-                last,                           /*< end iterator >*/
-                double_ >> *(',' >> double_),   /*< the parser >*/
-                space                           /*< the skip-parser >*/
-        );
-        if (first != last) // fail if we did not get a full match
-            return false;
-        return r;
+        json = whitespace;
+
+
     }
-    //]
-}
+
+    qi::rule<Iterator, string()> whitespace;
+    qi::rule<Iterator, json()> begin_array;
+    qi::rule<Iterator, json()> end_array;
+    qi::rule<Iterator, json()> begin_object;
+    qi::rule<Iterator, json()> end_object;
+    qi::rule<Iterator, json()> name_separator;
+    qi::rule<Iterator, json()> value_separator;
+
+
+    qi::rule<Iterator, json()> json;
+
+
+};

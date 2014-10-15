@@ -1,13 +1,15 @@
 #include <iostream>
+#define BOOST_SPIRIT_DEBUG
 #include "Grammar.hpp"
 #include <boost/spirit/include/qi.hpp>
 #include <fstream>
 
 using namespace std;
-#define FILENAME "jsontest.json"
+#define FILENAME "/home/troels/Documents/Config/test/jsontest.json"
 int
 main()
 {
+    std::cout << "Testing json" << std::endl;
     char const* filename;
 
     std::ifstream in(FILENAME, std::ios_base::in);
@@ -27,21 +29,27 @@ main()
             std::back_inserter(storage));
 
     typedef json_grammar<std::string::const_iterator> json_grammar;
-    json_grammar xml; // Our grammar
-    json::json ast; // Our tree
+    json_grammar json; // Our grammar
+    json::Json ast; // Our tree
 
     using boost::spirit::standard::space;
     std::string::const_iterator iter = storage.begin();
     std::string::const_iterator end = storage.end();
-    bool r = phrase_parse(iter, end, xml, space, ast);
+
+    bool r = phrase_parse(iter, end, json, space, ast);
 
     if (r && iter == end)
     {
         std::cout << "-------------------------\n";
         std::cout << "Parsing succeeded\n";
         std::cout << "-------------------------\n";
-        //client::mini_xml_printer printer;
-        //printer(ast);
+        json::Array a = boost::get<json::Array>(ast);
+        std::cout << a.size() << std::endl;
+        json::Object o = boost::get<json::Object>(o[0]);
+        for(auto& it : o)
+        {
+            std::cout << it.first << std::endl;//<< ";" << it.second << std::endl;
+        }
         return 0;
     }
     else

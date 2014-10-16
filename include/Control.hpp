@@ -1,8 +1,0 @@
-namespace Config
-{
-	class Control
-	{
-
-	};
-
-}

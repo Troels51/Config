@@ -1,8 +1,14 @@
-
+#pragma once
+#include "Grammar.hpp"
 #include <map>
 #include <vector>
 #include <string>
 #include <boost/variant/variant_fwd.hpp>
+#include <boost/variant/recursive_variant.hpp>
+#include <boost/variant/get.hpp>
+#include <iostream>
+#include <fstream>
+#include <boost/spirit/include/qi.hpp>
 
 namespace json
 {
@@ -11,35 +17,4 @@ namespace json
     typedef std::map<std::string, Value> Object;
     typedef boost::variant<Array, Object> Json;
 
-
-//    typedef boost::variant<bool, boost::recursive_wrapper<Object>,boost::recursive_wrapper<Array> , int, std::string> Value;
-//    struct Object
-//    {
-//        Object()
-//        {
-//        }
-//        Object(Value value)
-//        {
-//            mapping = boost::get<Object>(value).mapping;
-//        }
-//        push_back()
-//        std::map<std::string, Value> mapping;
-//    };
-//    struct Array
-//    {
-//        Array()
-//        {
-//        }
-//        Array(Value value)
-//        {
-//            valueVector = boost::get<Array>(value).valueVector;
-//        }
-//        std::vector<Value> valueVector;
-//    };
-
 }
-
-//BOOST_FUSION_ADAPT_STRUCT(
-//        json::Json,
-//(boost::optional<json::Array>, maybe_array)
-//(boost::optional<json::Object>, maybe_object))

@@ -9,7 +9,7 @@ using namespace std;
 int
 main()
 {
-    std::cout << "Testing json" << std::endl;
+    //std::cout << "Testing json" << std::endl;
     char const* filename;
 
     std::ifstream in(FILENAME, std::ios_base::in);
@@ -40,15 +40,27 @@ main()
 
     if (r && iter == end)
     {
-        std::cout << "-------------------------\n";
-        std::cout << "Parsing succeeded\n";
-        std::cout << "-------------------------\n";
-        json::Array a = boost::get<json::Array>(ast);
-        std::cout << a.size() << std::endl;
-        json::Object o = boost::get<json::Object>(o[0]);
+        //std::cout << "-------------------------\n";
+        //std::cout << "Parsing succeeded\n";
+        //std::cout << "-------------------------\n";
+        //json::Array a = boost::get<json::Array>(ast);
+        //std::cout << a.size() << std::endl;
+        //std::cout << ast << endl;
+        json::Object o = boost::get<json::Object>(ast);
+        json::Value k = o.find("glossary")->second;
+        o = boost::get<json::Object>(k);
+        k = o.find("title")->second;
+        json::Array a = boost::get<json::Array>(k);
+        std::cout << "Vector size: " << a.size() << std::endl;
+        for(auto& it : a)
+        {
+            std::cout << boost::get<int>(it) << std::endl;
+        }
+
+
         for(auto& it : o)
         {
-            std::cout << it.first << std::endl;//<< ";" << it.second << std::endl;
+          std::cout << it.first << std::endl;//<< ";" << it.second << std::endl;
         }
         return 0;
     }

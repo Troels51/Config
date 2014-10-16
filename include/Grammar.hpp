@@ -13,7 +13,6 @@
 #include <boost/fusion/include/std_pair.hpp>
 #include <boost/foreach.hpp>
 #include <boost/fusion/include/adapted.hpp>
-
 namespace qi = boost::spirit::qi;
 namespace fusion = boost::fusion;
 namespace phoenix = boost::phoenix;
@@ -29,6 +28,8 @@ struct json_grammar : qi::grammar<Iterator, json::Json()>
         using qi::_val;
         using qi::_1;
         using qi::_2;
+        using qi::int_;
+        using qi::as;
         using namespace qi::labels;
 
         using phoenix::construct;
@@ -37,27 +38,27 @@ struct json_grammar : qi::grammar<Iterator, json::Json()>
 
         using boost::spirit::standard::char_; //TODO: json is unicode, spirit may support it
         using boost::spirit::standard::digit;
-        using boost::spirit::qi::int_;
         whitespace   = *(char_(' ') | char_('\t') | char_('\r') | char_('\n'));
-        begin_array  = whitespace >> char_('[') >> whitespace;
-        end_array    = whitespace >> char_(']') >> whitespace;
-        begin_object = whitespace >> char_('{') >> whitespace;
-        end_object   = whitespace >> char_('}') >> whitespace;
-        name_separator  = whitespace >> char_(':') >> whitespace;
-        value_separator = whitespace >> char_(',') >> whitespace;
-        member = jstring > name_separator > value;// [_val = construct< std::pair<std::string, json::value > >(_1, _2)];
-        object = begin_object > -(member >> *(value_separator >> member)) > end_object;// [push_back(_val,_1)];
-        array = begin_array > -(value >> *(value_separator >> value)) > end_array;
-        number = -(char_('-')) >> int_ -(char_('.') >> +(digit)) >> -(char_('e') >> -(char_('-') | char_('+')) >> +digit);
+        begin_array  = whitespace >> '[' >> whitespace;
+        end_array    = whitespace >> ']' >> whitespace;
+        begin_object = whitespace >> '{' >> whitespace;
+        end_object   = whitespace >> '}' >> whitespace;
+        name_separator  = whitespace >> ':' >> whitespace;
+        value_separator = whitespace >> ',' >> whitespace;
+        member = jstring > name_separator > value;
+        object = begin_object > -(member % value_separator) > end_object;
+        array =  begin_array >> -(value % value_separator) > end_array;
+        number = int_;//-(char_('-')) >> int_ -(char_('.') >> +(digit)) >> -(char_('e') >> -(char_('-') | char_('+')) >> +digit);
         unesc_char.add("\\a", '\a')("\\b", '\b')("\\f", '\f')("\\n", '\n')
                 ("\\r", '\r')("\\t", '\t')("\\v", '\v')("\\\\", '\\')
                 ("\\\'", '\'')("\\\"", '\"');
 
-        jstring = '"' >> *(unesc_char | qi::alnum | qi::space | "\\x" >> qi::hex) >> '"';
-        value = lit("false") | lit("null") | lit("true") | object | array | number | jstring;
-        json = object | array;
+        jstring = '"' >> *(unesc_char | qi::alnum | qi::space | (qi::punct - char('"')) | "\\x" >> qi::hex) > '"';
+        value = number | object | array | jstring | "false" | "null" | "true" ;
+        json = array | object ;
 
         json.name("json");
+        array.name("array");
         begin_array.name("begin_array");
         begin_object.name("begin_object");
         object.name("object");
@@ -82,6 +83,7 @@ struct json_grammar : qi::grammar<Iterator, json::Json()>
                                 << val("\"")
                                 << std::endl
                 );
+        qi::debug(array);
     }
     qi::rule<Iterator> whitespace;
     qi::rule<Iterator> begin_array;

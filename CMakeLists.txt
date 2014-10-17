@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 project (Config)
 set(CMAKE_BUILD_TYPE Release)
 
-set(SOURCES 
-    src/Config.cpp
-)
 SET(CMAKE_CXX_FLAGS "-std=c++0x")
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
